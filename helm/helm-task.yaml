@@ -25,9 +25,6 @@ spec:
     default: ""
   - name: NO_PROXY
     default: ""
-  - name: source
-    type: git
-    optional: true
   steps:
     - name: repo
       image: alpine/helm:latest
@@ -35,9 +32,9 @@ spec:
         helm repo add $(params.REPO) $(params.REPO_URL)
       env:
         - name: HTTPS_PROXY
-          value: $(params.REPO)
+          value: $(params.PROXY_URL)
         - name: NO_PROXY
-          value: $(params.REPO)
+          value: $(params.NO_PROXY)
     - name: upgrade
       image: alpine/helm:latest
       script: |
@@ -46,6 +43,6 @@ spec:
         - "$(params.flags)"
       env:
         - name: HTTPS_PROXY
-          value: $(params.REPO)
+          value: $(params.PROXY_URL)
         - name: NO_PROXY
-          value: localhost,.mtb.com
+          value: $(params.NO_PROXY)
