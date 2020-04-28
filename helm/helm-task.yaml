@@ -49,6 +49,6 @@ spec:
         - "$(params.flags)"
       env:
         - name: HTTPS_PROXY
-          value: http://proxy.prod.mtb.com:8080
+          value: $(params.REPO)
         - name: NO_PROXY
-          value: localhost,.mtb.com
+          value: $(params.REPO)
