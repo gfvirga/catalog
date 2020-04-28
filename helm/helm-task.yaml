@@ -1,4 +1,3 @@
----
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
@@ -9,7 +8,7 @@ spec:
     description: repo
     default: stable
   - name: REPO_URL
-    descript: Repository Address
+    description: Repository Address
     default: https://kubernetes-charts.storage.googleapis.com
   - name: chart
     description: The path for your helm chart
@@ -26,11 +25,9 @@ spec:
     default: ""
   - name: NO_PROXY
     default: ""
-  resources:
-    inputs:
-      - name: source
-        type: git
-        optional: true
+  - name: source
+    type: git
+    optional: true
   steps:
     - name: repo
       image: alpine/helm:latest
@@ -51,4 +48,4 @@ spec:
         - name: HTTPS_PROXY
           value: $(params.REPO)
         - name: NO_PROXY
-          value: $(params.REPO)
+          value: localhost,.mtb.com
