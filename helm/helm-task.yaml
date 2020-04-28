@@ -1,0 +1,54 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: helm
+spec:
+  params: 
+  - name: REPO
+    description: repo
+    default: stable
+  - name: REPO_URL
+    descript: Repository Address
+    default: https://kubernetes-charts.storage.googleapis.com
+  - name: chart
+    description: The path for your helm chart
+    default: "."
+  - name: release
+    description: Release name
+    default: "helm"
+  - name: flags
+    description: Flags 
+    type: array
+    default:
+    - "--install"
+  - name: PROXY_URL
+    default: ""
+  - name: NO_PROXY
+    default: ""
+  resources:
+    inputs:
+      - name: source
+        type: git
+        optional: true
+  steps:
+    - name: repo
+      image: alpine/helm:latest
+      script: |
+        helm repo add $(params.REPO) $(params.REPO_URL)
+      env:
+        - name: HTTPS_PROXY
+          value: $(params.REPO)
+        - name: NO_PROXY
+          value: $(params.REPO)
+    - name: upgrade
+      image: alpine/helm:latest
+      script: |
+        helm upgrade $(params.release) $(params.chart)"
+      args:
+        - "$(params.flags)"
+      env:
+        - name: HTTPS_PROXY
+          value: http://proxy.prod.mtb.com:8080
+        - name: NO_PROXY
+          value: localhost,.mtb.com
